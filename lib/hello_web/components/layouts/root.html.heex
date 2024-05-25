@@ -11,7 +11,43 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="bg-white antialiased">
-    <%= @inner_content %>
-  </body>
+
+  <div>
+    <header class="w-full  bg-gray-800 text-white p-4 fixed top-0 z-50">
+      <div class="w-3/4">
+        <ul class="flex justify-evenly">
+          <li>Section01</li>
+          <li>Section02</li>
+          <li>Section03</li>
+          <li>Section04</li>
+          <li>Section05</li>
+        </ul>
+      </div>
+    </header>
+
+    <div class="flex pt-16">
+      <div
+        id="sidebar"
+        class="fixed inset-y-0 left-0  bg-gray-500 text-white p-4 transition-transform transform -translate-x-full md:translate-x-0 pt-16"
+      >
+        <ul class="space-y-2">
+          <li><a href="#home" class="block p-2 hover:bg-gray-700 rounded">demo01</a></li>
+          <li><a href="#services" class="block p-2 hover:bg-gray-700 rounded">demo02</a></li>
+          <li><a href="#clients" class="block p-2 hover:bg-gray-700 rounded">demo03</a></li>
+          <li><a href="#contact" class="block p-2 hover:bg-gray-700 rounded">demo04</a></li>
+
+          <li><a href="#home" class="block p-2 hover:bg-gray-700 rounded">demo05</a></li>
+          <li><a href="#services" class="block p-2 hover:bg-gray-700 rounded">demo06</a></li>
+          <li><a href="#clients" class="block p-2 hover:bg-gray-700 rounded">demo07</a></li>
+          <li><a href="#contact" class="block p-2 hover:bg-gray-700 rounded">demo08</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="main_contant" class=" pl-40 ">
+    <body class="bg-white antialiased">
+      <%= @inner_content %>
+    </body>
+  </div>
 </html>
