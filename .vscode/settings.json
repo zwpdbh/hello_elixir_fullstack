@@ -1,7 +1,6 @@
 {
   "files.associations": {
     "*.heex": "phoenix-heex",
-    "*.eex": "phoenix-heex"
   },
   "tailwindCSS.includeLanguages": {
     "phoenix-heex": "html",
@@ -13,8 +12,6 @@
   "emmet.showAbbreviationSuggestions": true,
   "emmet.includeLanguages": {
     "phoenix-heex": "html",
-    "html-eex": "html",
-    "HTML (EEx)": "html"
   },
   "editor.quickSuggestions": {
     "comments": "inline",
