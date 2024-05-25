@@ -75,6 +75,8 @@ ghcr.io/livebook-dev/livebook:0.12.1
     * `Cookie` should be: the cookie we used above, such as `some_token`.
   * If connect succeed, it should shows the reconnect and disconnect option along with memory metric for the connect node.
 * If connected, it means we could create code block and execute any code as if we are using `iex`.
+  * For example, if we visit `http://localhost:4000/route`, we shall see the existing routes available in phoenix.
+  * We could also get the same infomation in livebook by executing the code: `Mix.Tasks.Phx.Routes.run ''` in evaluation cell.
 
 ## Start Postgres via dockerfile
 

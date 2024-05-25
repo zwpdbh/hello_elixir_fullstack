@@ -3,5 +3,5 @@
 ## Section
 
 ```elixir
-
+Mix.Tasks.Phx.Routes.run(~c"")
 ```
