@@ -76,7 +76,99 @@ ghcr.io/livebook-dev/livebook:0.12.1
   * If connect succeed, it should shows the reconnect and disconnect option along with memory metric for the connect node.
 * If connected, it means we could create code block and execute any code as if we are using `iex`.
 
+## Start Postgres via dockerfile
+
+* Create a `dev.yaml`:
+
+```yaml
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+      
+volumes:
+  pgdata:
+```
+
+* Start up using `sudo docker compose -f dev.yaml up`
+* Visit: [Login - Adminer](http://localhost:8080/)
+
+## Proxy hex packages
+
+* Elixir use `hex` to manage packages.
+* Permanently select a mirror
+  * For mix
+  
+      ```sh
+      # For mix 
+      mix hex.config mirror_url https://repo.hex.pm 
+      ```
+
+  * For rebar3
+  
+    Add to the global or a project’s top level `rebar.config, {rebar_packages_cdn, "https://repo.hex.pm"}.`. For more information see rebar3’s package support and configuration documentation.
+
+  See: [Mirrors](https://hex.pm/docs/mirrors)
+
+* Temporarily select a mirror, Hex commands can be prefixed with an environment variable in the shell.
+  
+  ```sh
+  HEX_MIRROR=https://repo.hex.pm mix deps.get
+  HEX_CDN=https://repo.hex.pm rebar3 update
+
+  # Or 
+  export HEX_MIRROR="https://hexpm.upyun.com"
+  export HEX_CDN="https://hexpm.upyun.com"
+  ```
+
+## Proxy docker images
+
+Edit or create the Docker daemon configuration file (`sudo vi /etc/docker/daemon.json`) to include the following mirror configurations:
+
+```json
+{
+  "registry-mirrors": [
+    "https://registry.docker-cn.com",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://hub-mirror.c.163.com",
+    "https://mirror.baidubce.com"
+  ]
+}
+```
+
+After adding the mirror configurations, restart the Docker daemon to apply the changes:
+
+```sh
+sudo service docker restart
+sudo docker info
+```
+
+You shall see information like:
+
+```txt
+ Registry Mirrors:
+  https://registry.docker-cn.com/
+  https://docker.mirrors.ustc.edu.cn/
+  https://hub-mirror.c.163.com/
+  https://mirror.baidubce.com/
+```
+
 ## Troubleshooting
+
+### [error] `inotify-tools` is needed to run `file_system` for your system
+
+Solution: `sudo apt install inotify-tools`
 
 ### Cannot get connection id for node :":myapp@localhost"
 
