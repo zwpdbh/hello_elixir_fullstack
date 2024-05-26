@@ -22,6 +22,7 @@
   "elixirLS.fetchDeps": false,
   "elixirLS.trace.server": "off",
   "elixirLS.suggestSpecs": false,
+  "editor.wordBasedSuggestions": "matchingDocuments",
   "editor.quickSuggestions": {
     "comments": "inline",
     "strings": "on",
