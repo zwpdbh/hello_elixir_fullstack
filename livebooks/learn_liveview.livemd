@@ -68,9 +68,90 @@ end
 * It renders other actions by using the template files inside `demo_html` folder.  
   * In folder `lib/hello_web/controllers/demo_html`, the template file `show.html.heex` renders the `:show` action
 
-## Understand liveview
+## Understand plug
 
-Things learned
+Understand the `use` macro, such as in the `HelloWeb.DemoHTML` module, there is 
+`use HelloWeb, :html`.
 
-* `Plug`is also controller
+When `use MyModule, some: :options`:\
+Elixir will invoke `MyModule.__using__/1` passing the second argument of use as its argument.  
+So, the `use HelloWeb, :html` will invoke `HelloWeb`'s `__using__/1`:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+@doc """
+When used, dispatch to the appropriate controller/live_view/etc.
+"""
+defmacro __using__(which) when is_atom(which) do
+  apply(__MODULE__, which, [])
+end
+```
+
+It calls `HelloWeb.html`.
+
+<!-- livebook:{"break_markdown":true} -->
+
+The center of phoenix is plugs, and read `hello_web.ex` is the key to understand the flow of your request.
+
+* `Plug`is also controller. [All Phoenix controllers are plugs](https://hexdocs.pm/phoenix/plug.html)
+  * All plugs must implement `call/2` which accepts a `conn` and returns a `conn`. In our case, we're looking for a conn that has some rendered HTML.
 * `live` also goes through controller.
+  * `live()` macros is adding a `GET` route and calls the `Phoenix.LiveView.Plug`.
+
+## Create LiveView
+
+Instead of using `get` or `post`, we defines the route for LiveView with `live`:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+scope "/", HelloWeb do
+  pipe_through :browser
+
+  get "/", PageController, :home
+  get "/hello", HelloController, :index
+  get "/demo", DemoController, :index
+  get "/demo/:demo_name", DemoController, :show
+  live "/guess", WrongLive
+end
+```
+
+We then, create `lib/hello_web/live/wrong_live.ex`
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule HelloWeb.WrongLive do
+  # use Phoenix.LiveView
+  use HelloWeb, :live_view
+
+  def mount(_params, _session, socket) do
+    socket = assign(socket, score: 0, message: "Make a guess")
+    {:ok, socket}
+  end
+
+  def render(assigns) do
+    ~H"""
+    <h1>Your score: <%= @score %></h1>
+    <h2>
+      <%= @message %>
+    </h2>
+    <%= for n <- 1..10 do %>
+      <a href="#" phx-click="guess" phx-value-number={n}><%= n %></a>
+    <% end %>
+    <h2></h2>
+    """
+  end
+
+  def handle_event("guess", %{"number" => guess} = _data, socket) do
+    message = "Your guess: #{guess}. Wrong. Guess again."
+    socket = assign(socket, message: message, score: socket.assigns.score - 1)
+
+    {
+      :noreply,
+      socket
+    }
+  end
+end
+```
