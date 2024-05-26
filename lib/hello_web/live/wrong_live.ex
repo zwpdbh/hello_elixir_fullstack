@@ -1,5 +1,5 @@
 defmodule HelloWeb.WrongLive do
-  use HelloWeb, :live_view
+  use Phoenix.LiveView
 
   def mount(_params, _session, socket) do
     socket = assign(socket, score: 0, message: "Make a guess")
