@@ -3,9 +3,9 @@ defmodule HelloWeb.DemoHTML do
 
   embed_templates "demo_html/*"
 
-  # def demo(assigns) do
-  #   ~H"""
-  #   Hello Demos
-  #   """
-  # end
+  def index(assigns) do
+    ~H"""
+    Hello! Demo
+    """
+  end
 end
