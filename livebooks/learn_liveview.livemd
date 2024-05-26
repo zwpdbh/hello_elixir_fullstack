@@ -12,6 +12,65 @@ Mix.Tasks.Phx.Routes.run(~c"")
 Phoenix.LiveView.Socket.__struct__()
 ```
 
-## Build a simple liveview
+## Understand standard phoenix view
 
-Different from define an ordinary route, we need a "live route"
+There are the worklfow for a standard phoenix view:
+
+In `router.ex`, the controller are defined to handle action.
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+get "/demo", DemoController, :index
+get "/demo/:demo_name", DemoController, :show
+```
+
+In file `lib/hello_web/controllers/demo_controller.ex`
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule HelloWeb.DemoController do
+  use HelloWeb, :controller
+
+  def index(conn, _param) do
+    render(conn, :index)
+  end
+
+  def show(conn, %{"demo_name" => demo_name}) do
+    render(conn, :show, demo_name: demo_name)
+  end
+end
+```
+
+* `index` and `show` functions in `DemoControllers` defines how to render the view.
+* The render logic is implement inside: `demo_html.ex` file basides `demo_controller.ex`.
+
+Inside `demo_html.ex`
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule HelloWeb.DemoHTML do
+  use HelloWeb, :html
+
+  embed_templates "demo_html/*"
+
+  def index(assigns) do
+    ~H"""
+    Hello! Demo
+    """
+  end
+end
+```
+
+* It renders `:index` action by using a elixir function.
+* It renders other actions by using the template files inside `demo_html` folder.  
+  * In folder `lib/hello_web/controllers/demo_html`, the template file `show.html.heex` renders the `:show` action
+
+## Understand liveview
+
+Things learned
+
+* `Plug`is also controller
+* `live` also goes through controller.
