@@ -1,0 +1,17 @@
+# Learn Liveview
+
+## Test Connection to your phoenix application
+
+```elixir
+# Test current routes
+Mix.Tasks.Phx.Routes.run(~c"")
+```
+
+```elixir
+# Test liveview
+Phoenix.LiveView.Socket.__struct__()
+```
+
+## Build a simple liveview
+
+Different from define an ordinary route, we need a "live route"
