@@ -3,7 +3,7 @@ defmodule HelloWeb.HelloHTML do
 
   def index(assigns) do
     ~H"""
-    Hello!
+    Hello for /hello
     """
   end
 end
