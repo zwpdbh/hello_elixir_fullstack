@@ -22,6 +22,7 @@ defmodule HelloWeb.Router do
     get "/demo", DemoController, :index
     get "/demo/:demo_name", DemoController, :show
     live "/guess", WrongLive
+    live "css", CssLive
   end
 
   # Other scopes may use custom stacks.
