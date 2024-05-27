@@ -5,21 +5,27 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+h1 {
+  @apply text-2xl;
+}
 
-@layer base {
-  h1 {
-    @apply text-2xl;
-  }
+h2 {
+  @apply text-xl;
+}
 
-  h2 {
-    @apply text-xl;
-  }
+h3 {
+  @apply text-lg;
+}
 
-  h3 {
-    @apply text-lg;
-  }
+a {
+  @apply text-blue-700 underline;
+}
 
-  a {
-    @apply text-blue-600 underline;
-  }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: crimson;
 }
