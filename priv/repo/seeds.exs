@@ -9,3 +9,15 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+#
+# Rest Database
+#
+
+Hello.Seeds.clear()
+
+#
+# Seed Database
+#
+
+Hello.Seeds.run()

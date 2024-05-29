@@ -44,3 +44,31 @@ IO.inspect(ExampleModule.get_valid_filters())
 IO.inspect(ExampleModule.valid_filter?(:date))
 IO.inspect(ExampleModule.valid_filter?(:invalid))
 ```
+
+## Play with Absinthe.Schema
+
+Let's take a look at how the menu item object type
+is modeled in our schema module. We'll use the handy `Absinthe.Schema.lookup_type`
+function:
+
+```elixir
+Absinthe.Schema.lookup_type(HelloWeb.Schema, "MenuItem")
+```
+
+Making a query.
+
+To support users getting menu items, we need to provide two things:
+
+* A way for users to request objects of the type
+* A way for the system to retrieve (or resolve) the associated data
+
+```elixir
+# Check the entry point 
+Absinthe.Schema.lookup_type(HelloWeb.Schema, "RootQueryType")
+```
+
+## Resolver
+
+```elixir
+
+```
