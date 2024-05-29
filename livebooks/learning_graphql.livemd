@@ -1,5 +1,12 @@
 # Things has learned during learning graphql
 
+## Seed the database
+
+```elixir
+# Run this only once for filling with some testing data
+Hello.Seeds.run()
+```
+
 ## Sigal
 
 ```elixir
@@ -65,10 +72,4 @@ To support users getting menu items, we need to provide two things:
 ```elixir
 # Check the entry point 
 Absinthe.Schema.lookup_type(HelloWeb.Schema, "RootQueryType")
-```
-
-## Resolver
-
-```elixir
-
 ```
