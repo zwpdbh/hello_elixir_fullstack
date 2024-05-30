@@ -120,12 +120,21 @@ If later nwe need to modify DB, we just create migration and run `mix ecto.migra
 
 With tables are ready, we need to prepare some simple data for testing purpose.
 
-Create a `seeds.exs` script file in folder `/priv/repo/`.  Inside of it, we create call other `.ex` file:
+Edit the `/priv/repo/seeds.exs` script file:
 
 <!-- livebook:{"force_markdown":true} -->
 
 ```elixir
-# mix run priv/repo/seeds.exs
+# Script for populating the database. You can run it as:
+#
+#     mix run priv/repo/seeds.exs
+#
+# Inside the script, you can read and write to any of your
+# repositories directly:
+#
+#     Hello.Repo.insert!(%Hello.SomeSchema{})
+#
+
 # Rest Database
 Hello.Seeds.clear()
 
