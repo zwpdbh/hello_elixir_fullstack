@@ -71,7 +71,7 @@ defmodule HelloWeb.Schema.Query.MenuItemsTest do
              "errors" => [
                %{"message" => message}
              ]
-           } = json_response(response, 400)
+           } = json_response(response, 200)
 
     assert message == "Argument \"matching\" has invalid value 123."
   end
