@@ -255,3 +255,13 @@ end
 ```
 
 Finally, run it as `mix run priv/repo/seeds.exs`.
+
+## Troubleshooting
+
+ERROR 42P07 (duplicate_table) relation "categories" already exists
+
+<!-- livebook:{"break_markdown":true} -->
+
+This is because the sand box is not cleanup.
+
+Solution: `MIX_ENV=test mix clean`
