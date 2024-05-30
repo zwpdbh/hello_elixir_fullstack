@@ -7,7 +7,7 @@ const path = require("path")
 
 module.exports = {
   corePlugins: {
-    preflight: false,
+    preflight: true,
   },
   content: [
     "./js/**/*.js",

@@ -1,0 +1,120 @@
+# Things has learned during learning graphql
+
+## Seed the database
+
+```elixir
+# Run this only once for filling with some testing data
+Hello.Seeds.run()
+```
+
+## Sigal
+
+```elixir
+defmodule ExampleModule do
+  # Define a module attribute @valid_filters with a list of atoms
+  @valid_filters ~w(date location_id name)a
+
+  # Function to get the value of @valid_filters
+  def get_valid_filters do
+    @valid_filters
+  end
+
+  # Function to check if a given filter is valid
+  def valid_filter?(filter) when is_atom(filter) do
+    filter in @valid_filters
+  end
+end
+```
+
+In Elixir, the `@` symbol is used to define module attributes. These attributes can be used to store constant values that are associated with the module. They can also be accessed and manipulated within the module.
+
+The specific attribute `@valid_filters ~w(date location_id name)a` uses the `~w` sigil to create a list of words (strings) and the `a` modifier to indicate that the resulting list should contain atoms instead of strings. Atoms are constants whose name is their own value, and they are commonly used in Elixir for identifiers that don't change, such as keys in maps.
+
+Breaking it down:
+
+* `@valid_filters` is the name of the module attribute.
+* `~w(date location_id name)` is a sigil used to create a list of words.
+* `a` at the end of the sigil indicates that each word should be converted to an atom.
+
+So, `@valid_filters ~w(date location_id name)a` defines a module attribute `@valid_filters` that holds the list `[:date, :location_id, :name]`.
+
+In this code:
+
+* `@valid_filters` is defined as `[:date, :location_id, :name]`.
+* The `get_valid_filters` function returns this list.
+* The `valid_filter?/1` function checks if a given atom is in the `@valid_filters` list.
+
+This demonstrates a practical way to use module attributes to define constants and use them within functions in the same module.
+
+```elixir
+IO.inspect(ExampleModule.get_valid_filters())
+IO.inspect(ExampleModule.valid_filter?(:date))
+IO.inspect(ExampleModule.valid_filter?(:invalid))
+```
+
+<!-- livebook:{"branch_parent_index":1} -->
+
+## Capture Operator
+
+[capture doc](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&/1-capture)
+
+```elixir
+fun = &Kernel.is_atom/1
+```
+
+```elixir
+fun.(:atom)
+```
+
+```elixir
+fun.("string")
+```
+
+Using Elixir's & function capture special form as the resolver for the field and keeps the schema declaration tight and focused:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+defmodule HelloWeb.Schema do
+  alias HelloWeb.Resolvers
+  use Absinthe.Schema
+
+  object :menu_item do
+    field :id, :id
+    field :name, :string
+    field :description, :string
+  end
+
+  query do
+    field :menu_items, list_of(:menu_item) do
+      arg :matching, :string
+
+      resolve(&Resolvers.Menu.menu_items/3)
+    end
+  end
+end
+```
+
+<!-- livebook:{"branch_parent_index":1} -->
+
+## Play with Absinthe.Schema
+
+Let's take a look at how the menu item object type
+is modeled in our schema module. We'll use the handy `Absinthe.Schema.lookup_type`
+function:
+
+```elixir
+Absinthe.Schema.lookup_type(HelloWeb.Schema, "MenuItem")
+```
+
+Making a query.
+
+To support users getting menu items, we need to provide two things:
+
+* A way for users to request objects of the type
+* A way for the system to retrieve (or resolve) the associated data
+
+```elixir
+# Check the entry point 
+Absinthe.Schema.lookup_type(HelloWeb.Schema, "RootQueryType")
+```

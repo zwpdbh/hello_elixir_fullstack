@@ -14,6 +14,13 @@ defmodule HelloWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/" do
+    pipe_through :api
+
+    forward "/api", Absinthe.Plug, schema: HelloWeb.Schema
+    forward "/graphiql", Absinthe.Plug.GraphiQL, schema: HelloWeb.Schema, interface: :playground
+  end
+
   scope "/", HelloWeb do
     pipe_through :browser
 
@@ -22,10 +29,10 @@ defmodule HelloWeb.Router do
     get "/demo", DemoController, :index
     get "/demo/:demo_name", DemoController, :show
     live "/guess", WrongLive
-    live "css", CssLive
+    live "/css", CssLive
   end
 
-  # Other scopes may use custom stacks.
+  # # Other scopes may use custom stacks.
   # scope "/api", HelloWeb do
   #   pipe_through :api
   # end
