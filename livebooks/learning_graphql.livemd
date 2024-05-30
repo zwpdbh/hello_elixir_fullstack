@@ -52,6 +52,8 @@ IO.inspect(ExampleModule.valid_filter?(:date))
 IO.inspect(ExampleModule.valid_filter?(:invalid))
 ```
 
+<!-- livebook:{"branch_parent_index":1} -->
+
 ## Play with Absinthe.Schema
 
 Let's take a look at how the menu item object type
