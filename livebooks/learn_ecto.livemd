@@ -98,9 +98,13 @@ defmodule Hello.Repo.Migrations.CreateOrders do
   use Ecto.Migration
 
   def change do
-    create table(:items_taggings, primary_key: false) do
-      add(:item_id, references(:items), null: false)
-      add(:item_tag_id, references(:item_tags), null: false)
+    create table(:orders) do
+      add(:customer_number, :serial)
+      add(:items, :map)
+      add(:ordered_at, :utc_datetime, null: false, default: fragment("NOW()"))
+      add(:state, :string, null: false, default: "created")
+
+      timestamps()
     end
   end
 end
