@@ -1,0 +1,244 @@
+# Learn Ecto
+
+## Create Migration
+
+Use [ecto.gen.migration](https://hexdocs.pm/ecto_sql/Mix.Tasks.Ecto.Gen.Migration.html) from shell terminal to generate changeset:
+
+```sh
+mix ecto.gen.migration create_categories
+```
+
+It will generate file like: `* creating priv/repo/migrations/20240530072930_create_categories.exs`.
+
+Edit it to create changeset which operate DB:
+
+```elixir
+# Create table for Categories
+defmodule Hello.Repo.Migrations.CreateCategories do
+  use Ecto.Migration
+
+  def change do
+    create table(:categories) do
+      add(:description, :string)
+      add(:name, :string, null: false)
+
+      timestamps()
+    end
+  end
+end
+```
+
+Similary create other migrations:
+
+```elixir
+# Create table for Items
+defmodule Hello.Repo.Migrations.CreateItems do
+  use Ecto.Migration
+
+  def change do
+    create table(:items) do
+      add(:name, :string, null: false)
+      add(:description, :string)
+      add(:price, :decimal, null: false)
+      add(:added_on, :date, null: false, default: fragment("NOW()"))
+      add(:category_id, references(:categories, on_delete: :nothing))
+
+      timestamps()
+    end
+
+    create(index(:items, [:category_id]))
+  end
+end
+```
+
+```elixir
+# Create table for item' Tags
+defmodule Hello.Repo.Migrations.CreateItemTags do
+  use Ecto.Migration
+
+  def change do
+    create table(:item_tags) do
+      add(:name, :string, null: false)
+      add(:description, :string)
+
+      timestamps()
+    end
+  end
+end
+```
+
+```elixir
+# Create table for connecting items and item tags called ItemsTaggings
+defmodule Hello.Repo.Migrations.CreateMenuTagTaggings do
+  use Ecto.Migration
+
+  def change do
+    create table(:items_taggings, primary_key: false) do
+      add(:item_id, references(:items), null: false)
+      add(:item_tag_id, references(:item_tags), null: false)
+    end
+  end
+end
+```
+
+```elixir
+# Add unique index for items 
+defmodule Hello.Repo.Migrations.AddIndexForMenuItemNames do
+  use Ecto.Migration
+
+  def change do
+    create(unique_index(:items, [:name]))
+  end
+end
+```
+
+```elixir
+# Create table Orders
+defmodule Hello.Repo.Migrations.CreateOrders do
+  use Ecto.Migration
+
+  def change do
+    create table(:items_taggings, primary_key: false) do
+      add(:item_id, references(:items), null: false)
+      add(:item_tag_id, references(:item_tags), null: false)
+    end
+  end
+end
+```
+
+To make sure DB is freshed, we run the following commands from shell terminal
+
+```sh
+mix ecto.drop
+mix ecto.create
+mix ecto.migrate 
+```
+
+If later nwe need to modify DB, we just create migration and run `mix ecto.migrate`.
+
+## Seed
+
+With tables are ready, we need to prepare some simple data for testing purpose.
+
+Create a `seeds.exs` script file in folder `/priv/repo/`.  Inside of it, we create call other `.ex` file:
+
+<!-- livebook:{"force_markdown":true} -->
+
+```elixir
+# mix run priv/repo/seeds.exs
+# Rest Database
+Hello.Seeds.clear()
+
+# Seed Database
+Hello.Seeds.run()
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+The `Hello.Seeds` module is just plain elixir module and can access `<app_name>.Repo` which is `Hello.Repo`
+
+```elixir
+defmodule Hello.Seeds do
+  alias Hello.{Menu, Repo}
+
+  def run() do
+    #
+    # TAGS
+    #
+
+    vegetarian =
+      %Menu.ItemTag{name: "Vegetarian"}
+      |> Repo.insert!()
+
+    _vegan =
+      %Menu.ItemTag{name: "Vegan"}
+      |> Repo.insert!()
+
+    _gluten_free =
+      %Menu.ItemTag{name: "Gluten Free"}
+      |> Repo.insert!()
+
+    #
+    # SANDWICHES
+    #
+
+    sandwiches = %Menu.Category{name: "Sandwiches"} |> Repo.insert!()
+
+    _rueben =
+      %Menu.Item{name: "Reuben", price: 4.50, category: sandwiches}
+      |> Repo.insert!()
+
+    _croque =
+      %Menu.Item{name: "Croque Monsieur", price: 5.50, category: sandwiches}
+      |> Repo.insert!()
+
+    _muffuletta =
+      %Menu.Item{name: "Muffuletta", price: 5.50, category: sandwiches}
+      |> Repo.insert!()
+
+    _bahn_mi =
+      %Menu.Item{name: "Bánh mì", price: 4.50, category: sandwiches}
+      |> Repo.insert!()
+
+    _vada_pav =
+      %Menu.Item{name: "Vada Pav", price: 4.50, category: sandwiches, tags: [vegetarian]}
+      |> Repo.insert!()
+
+    #
+    # SIDES
+    #
+
+    sides = %Menu.Category{name: "Sides"} |> Repo.insert!()
+
+    _fries =
+      %Menu.Item{name: "French Fries", price: 2.50, category: sides}
+      |> Repo.insert!()
+
+    _papadum =
+      %Menu.Item{name: "Papadum", price: 1.25, category: sides}
+      |> Repo.insert!()
+
+    _pasta_salad =
+      %Menu.Item{name: "Pasta Salad", price: 2.50, category: sides}
+      |> Repo.insert!()
+
+    #
+    # BEVERAGES
+    #
+
+    beverages = %Menu.Category{name: "Beverages"} |> Repo.insert!()
+
+    _water =
+      %Menu.Item{name: "Water", price: 0, category: beverages}
+      |> Repo.insert!()
+
+    _soda =
+      %Menu.Item{name: "Soft Drink", price: 1.5, category: beverages}
+      |> Repo.insert!()
+
+    _lemonade =
+      %Menu.Item{name: "Lemonade", price: 1.25, category: beverages}
+      |> Repo.insert!()
+
+    _chai =
+      %Menu.Item{name: "Masala Chai", price: 1.5, category: beverages}
+      |> Repo.insert!()
+
+    _vanilla_milkshake =
+      %Menu.Item{name: "Vanilla Milkshake", price: 3.0, category: beverages}
+      |> Repo.insert!()
+
+    _chocolate_milkshake =
+      %Menu.Item{name: "Chocolate Milkshake", price: 3.0, category: beverages}
+      |> Repo.insert!()
+
+    :ok
+  end
+
+  def clear() do
+    # TODO
+  end
+end
+```
+
+Finally, run it as `mix run priv/repo/seeds.exs`.
