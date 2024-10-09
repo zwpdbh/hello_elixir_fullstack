@@ -1,4 +1,4 @@
-# sudo docker compose -f postgres/dev.yaml up
+# sudo docker compose -f dockerfiles/postgres_dev.yaml up
 services:
   db:
     image: postgres
