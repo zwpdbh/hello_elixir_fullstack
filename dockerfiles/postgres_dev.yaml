@@ -1,19 +1,31 @@
 # sudo docker compose -f dockerfiles/postgres_dev.yaml up
 services:
+# db setting should match the parameters defined in config/dev.exs, such as:
+# database: "hello_dev"
   db:
-    image: postgres
+    image: postgres:16
     restart: always
+    container_name: postgres_dev
     environment:
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+      - POSTGRES_DB=hello_dev
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     ports:
-      - 5432:5432
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+# visit http://localhost:8080/?pgsql=db. 
+# Notice:  
+# select system as PostgreSQL
+# the server name should be "db" which matches the name defined below.
+# the database should be "myapp" which is defined by "POSTGRES_DB".
   adminer:
     image: adminer
     restart: always
     ports:
-      - 3001:8080
-      
+      - 8080:8080
+    depends_on:
+      - db
+
 volumes:
-  pgdata:
+  postgres_data:
